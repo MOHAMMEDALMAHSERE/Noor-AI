@@ -1,332 +1,153 @@
-# 🤖 AI-Powered Assistive System for People with Disabilities
+# مشروع التعرف على لغة الإشارة (ASL) - 10 كلمات - PyTorch
 
-An AI-powered assistive system designed to improve accessibility and independence for deaf, hard-of-hearing, and blind individuals using **Artificial Intelligence, Deep Learning, Computer Vision, Natural Language Processing (NLP), and Speech Technologies**.
-
-The project aims to integrate intelligent communication, environmental understanding, and voice interaction into a unified assistive application.
+ملخص المحادثة: الهدف، المنهجية، الكود، النتائج، المشاكل والحلول، والخطوات الجاية.
 
 ---
 
-## 📌 Table of Contents
+## 1. الهدف
 
-- [Project Overview](#-project-overview)
-- [Problem Statement](#-problem-statement)
-- [Objectives](#-objectives)
-- [Key Features](#-key-features)
-- [System Architecture](#-system-architecture)
-- [Technology Stack](#-technology-stack)
-- [Project Roadmap](#-project-roadmap)
-- [Evaluation Metrics](#-evaluation-metrics)
-- [Expected Impact](#-expected-impact)
-- [Project Status](#-project-status)
-- [Contributors](#-contributors)
+- تدريب نموذج PyTorch يتعرف على حركات اليدين ويحدد الكلمة، باستخدام مسابقة **Google - Isolated Sign Language Recognition** (حجم الداتا 56 جيجا، 250 كلمة).
+- التركيز على **10 كلمات فقط** بدقة عالية وأقل أخطاء ممكنة:
+  `TV, apple, bird, book, car, cat, chair, clean, cloud, clown`
+- بالنهاية: تجربة مباشرة بالكاميرا على VS Code.
 
 ---
 
-## 🌟 Project Overview
+## 2. الداتا
 
-People with hearing and visual impairments often face challenges when communicating, interacting with digital devices, and understanding their surroundings.
-
-This project proposes an intelligent assistive system with two main components:
-
-1. **Arabic Sign Language Translation System:** Facilitates communication by translating Arabic sign language videos into Arabic text and converting Arabic text into corresponding sign language video sequences.
-
-2. **AI Assistant for Blind Users:** Provides voice-based interaction, object detection, environmental descriptions, and distance estimation to help users better understand their surroundings.
-
-The system aims to combine multiple AI technologies into an accessible solution that supports everyday activities and promotes independence.
+- ما لازم تحمل الـ 56 جيجا؛ بتفلتر `train.csv` على الكلمات الـ 10 وبتحمل ملفات الـ parquet تبعتهم فقط.
+- النتيجة: **3776 فيديو** من **21 participant**.
+- الـ parquet فيه 543 نقطة لكل فريم، بالترتيب: `face (0-467) | left_hand (468-488) | pose (489-521) | right_hand (522-542)`.
+- انتبه: الكلمة `TV` بحروف كبيرة بالـ `sign`؛ كتابتها `tv` بتسقطها من الفلترة.
 
 ---
 
-## 🎯 Problem Statement
+## 3. أهم الاستراتيجيات المتبعة
 
-Existing communication and accessibility solutions may not provide an integrated experience for users with different disabilities.
-
-This project aims to address the following challenges:
-
-- Communication barriers between sign language users and people who do not understand sign language.
-- Difficulty accessing visual information for blind users.
-- Limited natural-language interaction with digital devices.
-- Challenges identifying nearby objects and understanding the surrounding environment.
-
----
-
-## 🚀 Objectives
-
-- Develop a deep learning model for Arabic sign language recognition.
-- Convert recognized signs into Arabic text.
-- Generate sign language video sequences from Arabic text.
-- Enable Arabic voice commands and conversational interaction.
-- Detect objects and obstacles in the surrounding environment.
-- Estimate the relative distance between the camera and detected objects.
-- Generate natural Arabic audio descriptions and responses.
-- Integrate the system into a user-friendly mobile application.
-
----
-
-## ✨ Key Features
-
-### 1. 🤟 Arabic Sign Language Translation
-
-The proposed system will support two-way communication between Arabic text and sign language.
-
-**Sign Language to Text**
-- Process sign language videos.
-- Extract video frames and relevant visual landmarks.
-- Analyze spatial and temporal movement patterns.
-- Recognize signs using deep learning models.
-- Generate corresponding Arabic text.
-
-**Text to Sign Language**
-- Analyze Arabic text using NLP techniques.
-- Tokenize the input and identify relevant words.
-- Retrieve corresponding pre-recorded sign language videos.
-- Combine video clips into a continuous sequence.
-
-### 2. 🗣️ Intelligent Voice Assistant
-
-The assistant will allow users to interact with the application using Arabic voice commands.
-
-Planned capabilities include:
-
-- Speech-to-Text (STT).
-- Natural Language Understanding (NLU).
-- Intent Recognition.
-- Voice-based interaction.
-- Text-to-Speech (TTS).
-- Arabic audio responses.
-
-### 3. 👁️ Computer Vision and Scene Understanding
-
-The system will analyze camera images to provide useful information about the user's environment.
-
-Planned capabilities include:
-
-- Object Detection.
-- Scene Description.
-- Image Question Answering.
-- Relative Distance Estimation.
-- Nearby Obstacle Identification.
-- Voice Alerts for potentially close objects.
-
-### 4. 📱 Mobile Application Integration
-
-The planned mobile application will provide an accessible interface that connects the AI models with the user.
-
-Potential features include:
-
-- Voice interaction.
-- Camera-based scene analysis.
-- Arabic sign language translation.
-- Audio descriptions and alerts.
-- Backend integration for AI inference.
-
----
-
-## 🏗️ System Architecture
-
-The proposed architecture consists of two primary AI pipelines.
-
-### Pipeline A: Sign Language Translation
-
-```text
-Sign Language Video
-        |
-        v
-Video Frame Extraction
-        |
-        v
-Landmark and Feature Extraction
-        |
-        v
-CNN / 3D-CNN
-        |
-        v
-LSTM / Transformer
-        |
-        v
-Arabic Text Output
-```
-
-For text-to-sign translation:
-
-```text
-Arabic Text
-     |
-     v
-NLP Preprocessing
-     |
-     v
-Tokenization and Word Processing
-     |
-     v
-Sign Language Video Retrieval
-     |
-     v
-Video Stitching
-     |
-     v
-Sign Language Video Output
-```
-
-### Pipeline B: AI Assistant for Blind Users
-
-```text
-User Voice Command
-        |
-        v
-Speech-to-Text
-        |
-        v
-Intent Recognition / LLM
-        |
-        v
-Command Processing
-        |
-        +----------------------+
-        |                      |
-        v                      v
-Voice Command Execution   Camera Input
-                               |
-                               v
-                         Object Detection
-                               |
-                               v
-                         Distance Estimation
-                               |
-                               v
-                         Scene Understanding
-                               |
-                               v
-                         Natural Language Response
-                               |
-                               v
-                            Text-to-Speech
-                               |
-                               v
-                          Audio Feedback
-```
-
----
-
-## 🛠️ Technology Stack
-
-The following technologies are proposed for development. The final selection may change according to project requirements and experimental results.
-
-| Category | Proposed Technologies |
+| المحور | القرار |
 |---|---|
-| Programming Language | Python |
-| Deep Learning | PyTorch or TensorFlow |
-| Computer Vision | OpenCV |
-| Hand and Body Tracking | MediaPipe or OpenPose |
-| Sign Language Recognition | CNN, 3D-CNN, LSTM, Transformers |
-| Natural Language Processing | NLP, AraBERT, LLMs |
-| Speech Recognition | OpenAI Whisper |
-| Object Detection | YOLOv8 or EfficientDet |
-| Depth Estimation | MiDaS |
-| Vision-Language Models | LLaVA or BLIP |
-| Video Processing | FFmpeg, OpenCV |
-| Backend API | FastAPI |
-| Mobile Application | Flutter or React Native |
-| Evaluation | Accuracy, Precision, Recall, F1-Score |
+| النقاط المستخدمة | شفايف (40) + يدين (21+21) + pose (الكتفين والكوعين والرسغين = 6) = **88 نقطة** |
+| التطبيع | المركز = منتصف الكتفين، المقياس = عرض الكتفين |
+| تنظيف الفريمات | قص الفريمات الفاضية قبل/بعد ظهور اليدين |
+| توحيد الطول | **48 فريم** (resampling) |
+| Features الحركة | الفرق بين الفريمات (delta) |
+| Augmentation | قص/تسريع زمني، تدوير، تكبير، shear، إزاحة، ضجيج، حذف فريمات عشوائية |
+| التقسيم | **حسب participant_id** (مش عشوائي) لمنع الـ leakage |
+| Test set | participants منفصلين تماماً (4 participants، 719 عينة) |
+| التقييم | StratifiedGroupKFold بـ 4 folds + ensemble |
+| الثقة | threshold = 0.7 (أقل من هيك = "مش متأكد") |
 
 ---
 
-## 🗺️ Project Roadmap
+## 4. الموديل: `SignNet` (Conv1D + Transformer)
 
-### Phase 1: Data Collection and Preparation
-- Collect Arabic sign language videos.
-- Identify suitable datasets for visual recognition.
-- Prepare image, video, and audio data.
-- Extract video frames and visual landmarks.
-- Establish the development environment.
+حوالي 1.1 مليون parameter:
 
-### Phase 2: AI Model Development
-- Develop the sign language recognition pipeline.
-- Experiment with CNN-based and temporal models.
-- Implement speech recognition and intent detection.
-- Integrate object detection and distance estimation.
-- Evaluate different model architectures.
+1. **Embedding**: Linear (الأبعاد → 192) + LayerNorm + GELU + Dropout.
+2. **3 بلوكات Conv1D** (kernel 5, 5, 3) مع BatchNorm وGELU وDropout وresidual.
+3. **Positional embedding** متعلَّم (48 موقع).
+4. **Transformer Encoder**: طبقتين، 4 heads، بعد 192، FFN = 384، pre-norm.
+5. **Pooling**: متوسط + أكبر قيمة عبر الزمن (384 قيمة).
+6. **Classifier**: LayerNorm + Dropout + Linear → 10 فئات.
 
-### Phase 3: Application Integration
-- Develop the backend using FastAPI.
-- Connect trained models to the backend.
-- Build the mobile application interface.
-- Integrate camera input and voice interaction.
-- Implement accessible audio feedback.
-
-### Phase 4: Testing and Evaluation
-- Evaluate model performance using appropriate metrics.
-- Test sign language recognition on unseen videos.
-- Measure speech recognition performance.
-- Evaluate object detection and distance estimation.
-- Test usability, response time, and accessibility.
-- Conduct user testing with appropriate consent and supervision.
+**إعدادات التدريب:** AdamW (lr=1.5e-3, wd=1e-2) مع OneCycleLR، label smoothing 0.1، mixed precision، gradient clipping، early stopping (patience=20)، batch=64، 80 epoch كحد أقصى.
 
 ---
 
-## 📊 Evaluation Metrics
+## 5. النتائج (النسخة الأولى: XY فقط، 352 feature)
 
-The system will be evaluated using metrics appropriate to each task.
+**Validation لكل fold:** 89.37% / 83.74% / 86.42% / 82.13% (المتوسط **85.41%**)
 
-| Component | Evaluation Metrics |
+**Ensemble على الـ Test: 91.10%**
+
+| الكلمة | Precision | Recall |
+|---|---|---|
+| TV | 0.945 | 0.958 |
+| apple | 0.896 | 1.000 |
+| bird | 0.958 | 0.919 |
+| book | 0.955 | 0.900 |
+| car | 0.971 | 0.943 |
+| cat | 0.906 | 0.928 |
+| chair | 0.710 | 0.943 |
+| clean | 0.932 | 0.887 |
+| cloud | 0.981 | **0.684** |
+| clown | 0.946 | 0.959 |
+
+**تأثير الـ Confidence Threshold:**
+
+| العتبة | التغطية | الدقة على المجاب |
+|---|---|---|
+| ≥ 0.5 | 94.6% | 94.26% |
+| ≥ 0.6 | 91.4% | 96.04% |
+| ≥ 0.7 | 85.0% | 97.55% |
+| ≥ 0.8 | 75.8% | 98.72% |
+| ≥ 0.9 | 56.6% | 99.02% |
+
+**ملاحظات على النتائج:**
+- الـ train وصل ~97% والـ val عالق عند ~85%: المشكلة قلة تنوع الأشخاص (21 فقط) مش حجم الداتا.
+- نقطة الضعف: `cloud` (recall 68%) بتتخلط مع `chair` (10 أخطاء) و`cat` (8 أخطاء)، وبسببها precision كلمة `chair` نزلت لـ 71%.
+- بعض الـ folds وقفت بدري بسبب تذبذب الـ val مع OneCycle (فكرة: رفع الـ patience أو إلغاء early stopping).
+
+---
+
+## 6. نقاش تفسير الأخطاء
+
+- التفسير المقترح (أن cloud/chair/cat متشابهين بالحركة الثنائية البعد بسبب إهمال Z) هو **فرضية مش سبب مثبت**.
+- **Class weights** ما بنفعوا هون لأن الفئات متوازنة تقريباً (62-83 عينة لكل كلمة).
+- الـ Z من MediaPipe ضعيف (وصف المسابقة نفسه بنصح بتجاهله)، فلازم يُجرَّب كتجربة (ablation) مش كحل مضمون.
+- **سكربت التشخيص `diagnose.py`** بطلّع: الدقة لكل participant، ظهور اليدين (صح vs غلط)، جدول عينات cloud الغلط مع top-3 احتمالات، ورسومات للمسارات.
+
+---
+
+## 7. نسخة المستخدم المعدّلة (XY + Z + Focal Loss)
+
+- أضاف **Z لرؤوس الأصابع + الأنف** (11 قيمة) → **187 قيمة لكل فريم** ومع الـ delta = **374 feature**.
+- استبدل CrossEntropy بـ **FocalLoss (gamma=2)** مع label smoothing.
+- (بالكود تعريف FocalLoss مكرر مرتين، وهاد ما بأثر على التشغيل.)
+- نتائج هالنسخة لسا ما انقارنت مع الـ 91.1%.
+
+---
+
+## 8. التجربة المباشرة بالكاميرا (`live_camera.py`)
+
+- الكود القديم (LSTM 1629 × 60 فريم) **ما بنفع** مع الموديل الجديد.
+- ظهر خطأ: `size mismatch ... [192, 374] vs [192, 352]` لأن ملفات `fold*.pth` مدرّبة بنسخة الـ 374 feature؛ تم تعديل السكربت ليطابق نسخة الـ Z.
+- طريقة العمل: نافذة متحركة (~70 فريم) → نفس الـ preprocessing بالضبط → ensemble لكل `fold*.pth` → متوسط آخر 5 تنبؤات → عرض الكلمة إذا الثقة ≥ 0.7.
+- مهم: **ما بنعمل flip** للصورة قبل المعالجة (بيبدّل اليمين باليسار).
+- خيار `TEST_PARQUET` لاختبار الموديل على ملف من الداتا قبل فتح الكاميرا.
+- تحذير: الـ Z بالكاميرا المباشرة ممكن يختلف عن الداتا؛ وإذا التنبؤ مشوش، الحل الأسهل الرجوع لنسخة XY فقط.
+
+---
+
+## 9. أخطاء مرت بالمحادثة وحلولها
+
+| المشكلة | الحل |
 |---|---|
-| Sign Language Recognition | Accuracy, Precision, Recall, F1-Score |
-| Speech Recognition | Word Error Rate (WER) |
-| Object Detection | Precision, Recall, mAP |
-| Distance Estimation | Mean Absolute Error (MAE) |
-| System Performance | Inference Time, Response Latency |
-| User Experience | Usability and Accessibility Testing |
-
-Actual results will be added after the models have been implemented and evaluated.
+| كود قديم ناقص `import ReduceLROnPlateau` | استُبدل بـ OneCycleLR |
+| `'tv'` بدل `'TV'` | استخدام `TV` بحروف كبيرة |
+| تقسيم عشوائي (leakage بين الأشخاص) | تقسيم حسب `participant_id` |
+| LSTM كبير على 1629 feature | Conv1D + Transformer صغير على features مختارة |
+| `size mismatch 374 vs 352` | مطابقة ملف الكاميرا لنسخة التدريب المستخدمة |
 
 ---
 
-## 🌍 Expected Impact
+## 10. خطوات مقترحة لتحسين الدقة (95%+)
 
-The project aims to:
-
-- Improve communication accessibility for Arabic sign language users.
-- Help blind users obtain visual information through audio descriptions.
-- Support more natural interaction with digital devices.
-- Encourage the development of accessible Arabic AI technologies.
-- Promote independence and inclusion through intelligent assistive tools.
-
-**Important:** This system is intended to assist users, not replace human support or professional accessibility services. Object detection and distance estimation may be imperfect, so the application must not be treated as a guaranteed navigation or collision-avoidance system.
+1. **Features خاصة باليدين**: تطبيع كل يد نسبةً للرسغ، ومسافات وزوايا بين الأصابع.
+2. **Flip أفقي مع تبديل اليدين** (يحتاج mapping دقيق لنقاط الشفايف).
+3. **Mixup / CutMix** على التسلسلات وزيادة الـ dropout.
+4. **Ensemble بعدة seeds** (مثلاً 3 seeds × 4 folds) ثم تدريب نسخ نهائية على كل الداتا.
+5. **Fine-tuning** على تسجيلات المستخدم نفسه بكاميرته.
+6. **مقارنة منضبطة**: XY فقط مقابل XY+Z، و CrossEntropy مقابل Focal، على نفس التقسيم.
 
 ---
 
-## 📌 Project Status
+## 11. الملفات
 
-**Current Stage:** Planning and proposed system design.
-
-The project is currently organized around two main development tracks:
-
-- Arabic Sign Language Translation.
-- AI Assistant for Blind Users.
-
-Implementation, integration, and evaluation will proceed according to the project roadmap.
-
----
-
-## 👥 Contributors
-
-**Team:** AI Engineering and Data Science Team
-
-Contributors and individual responsibilities can be added here as development progresses.
-
----
-
-## 🤝 Contributions
-
-Contributions, suggestions, and discussions related to accessible AI technologies are welcome.
-
-If you would like to contribute, consider opening an issue to discuss a proposed feature or improvement before submitting a pull request.
-
----
-
-## 📄 License
-
-A license has not yet been selected. A license should be added before publicly distributing the source code.
-
----
-
-**Built with the goal of making AI more accessible, inclusive, and useful for everyone.** ❤️
+| الملف | الوصف |
+|---|---|
+| `asl_10_words_full.py` | pipeline التدريب الكامل (نسخة XY، 352 feature) |
+| `diagnose.py` | سكربت تشخيص أخطاء الموديل |
+| `live_camera.py` | تجربة مباشرة بالكاميرا (متوافق مع نسخة 374 feature) |
+| `fold0.pth ... fold3.pth` | أوزان الـ 4 موديلات |
+| `asl10_cache.npz` | كاش الداتا بعد المعالجة |
